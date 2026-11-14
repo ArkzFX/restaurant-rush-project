@@ -1,6 +1,6 @@
 # Restaurant Rush - Stage 3: Host, combo meals and Happy Hour
 
-This folder is the **Stage 3** (final) version. `java -cp out rush.Main` plays the base setting with every
+This is the **Stage 3** (final) version. `java -cp out rush.Main` plays the base setting with every
 feature. Add `--stage2` or `--stage1` to replay the earlier settings on the same code.
 
 ## Build and run
@@ -40,6 +40,29 @@ the Salad + Pasta Combo.
 duration is shown. Orders taken while it is on get 20% off, after any VIP discount, and the price is locked
 when the order is taken. Customers still waiting for a table or food recover 15 satisfaction (max 100) at
 the start of each active turn.
+
+## What changed from Stage 1
+
+Compare: https://github.com/ArkzFX/restaurant-rush-project/compare/stage-1...stage-2
+
+| File | Change | Reason |
+|---|---|---|
+| `entity/RegularCustomer.java` | new | Regular behaviour moved out of `Customer` |
+| `entity/VIPCustomer.java` | new | loss 5, overrides `applyDiscount` (10% off) |
+| `entity/CriticCustomer.java` | new | loss 12, overrides `chooseItem` (most expensive item) |
+| `control/CustomerType.java` | new | names the kinds of customer a schedule can contain |
+| `entity/Customer.java` | changed | made abstract; loss, type name and traits became hooks; added `applyDiscount` |
+| `control/Arrival.java` | changed | each arrival now carries a type and builds the matching customer |
+| `entity/Restaurant.java` | changed | the bill now asks the customer for its discount |
+| `entity/Menu.java`, `entity/Money.java` | changed | added `mostExpensive()` and `percentOf()` |
+| `control/GameConfig.java`, `Main.java` | changed | registration: new arrival mix; `--stage1` keeps the old setting selectable |
+| `control/GameController.java` | changed | one message string only; the turn loop has no customer type checks |
+| `test-runs/stage2-*.txt` | new | Stage 2 victory and defeat |
+| `test-runs/stage1-*.txt` | changed | one `y replay on this code |
+| `test-runs/run-all.sh` | changed | reads each script's `# ARGS:` line so earlier stages can be replayed |
+| `docs/class-diagram-stage2.puml` / `.png`  |
+
+The staff package and the rest of the turn loop did not change.
 
 ## What changed from Stage 2
 
