@@ -1,6 +1,6 @@
 # Restaurant Rush - Stage 2: customer behaviour
 
-This folder is the **Stage 2** version. It extends Stage 1 with VIP and Critic customers.
+This is the **Stage 2** version. It extends Stage 1 with VIP and Critic customers.
 Run `java -cp out rush.Main` for the Stage 2 game, or add `--stage1` to replay the Stage 1 setting.
 
 ## Build and run
