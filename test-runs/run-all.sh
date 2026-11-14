@@ -8,7 +8,9 @@ status=0
 for script in test-runs/*.txt; do
     name=$(basename "$script" .txt)
     log="test-runs/output/$name.log"
-    java -cp out rush.Main --echo < "$script" > "$log" 2>&1
+    # optional "# ARGS: ..." line in a script selects the game setting, e.g. --stage1
+    args=$(grep '^# ARGS: ' "$script" | sed 's/^# ARGS: //')
+    java -cp out rush.Main --echo $args < "$script" > "$log" 2>&1
     failed=0
     grep '^# EXPECT: ' "$script" | sed 's/^# EXPECT: //' | while IFS= read -r expected; do
         # ignore echoed script comments so an EXPECT line cannot match itself
