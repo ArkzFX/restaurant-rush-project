@@ -1,4 +1,5 @@
 # Stage 1 reproducible VICTORY run (base setting, all Regular customers)
+# ARGS: --stage1
 # EXPECT: VICTORY
 # EXPECT: Revenue: $66.00
 # EXPECT: Average satisfaction of paid customers: 79.2
