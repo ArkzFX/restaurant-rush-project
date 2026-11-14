@@ -15,14 +15,16 @@ public class Restaurant {
     private final List<Customer> waitingQueue = new ArrayList<>();
     private final List<Customer> customers = new ArrayList<>();
     private final Menu menu;
+    private final HappyHour happyHour;
     private int revenueCents;
     private int currentTurn;
 
-    public Restaurant(int tableCount, Menu menu) {
+    public Restaurant(int tableCount, Menu menu, HappyHour happyHour) {
         for (int i = 1; i <= tableCount; i++) {
             tables.add(new Table(i));
         }
         this.menu = menu;
+        this.happyHour = happyHour;
     }
 
     public void startTurn(int turn) {
@@ -70,9 +72,37 @@ public class Restaurant {
         return order;
     }
 
-    /** Price this customer will pay for an item ordered right now, after their own discount. */
+    /**
+     * Price this customer will pay for an item ordered right now. The customer discount
+     * comes first, then Happy Hour, and the result is locked in when the order is taken.
+     */
     public int quoteBill(Customer customer, MenuItem item) {
-        return customer.applyDiscount(item.getPriceCents());
+        return happyHour.apply(customer.applyDiscount(item.getPriceCents()));
+    }
+
+    // Happy Hour
+
+    public HappyHour getHappyHour() {
+        return happyHour;
+    }
+
+    /**
+     * Start-of-turn recovery while Happy Hour is active.
+     *
+     * @return the customers who were still waiting and recovered
+     */
+    public List<Customer> applyHappyHourRecovery() {
+        List<Customer> recovered = new ArrayList<>();
+        if (!happyHour.isActive()) {
+            return recovered;
+        }
+        for (Customer customer : customers) {
+            if (customer.getStatus().isAwaitingService()) {
+                customer.recover(HappyHour.RECOVERY_POINTS);
+                recovered.add(customer);
+            }
+        }
+        return recovered;
     }
 
     /** @return true if this unit made the order READY */
@@ -132,6 +162,11 @@ public class Restaurant {
     }
 
     // end of turn
+
+    /** Counts Happy Hour down once the turn is over. */
+    public void endTurn() {
+        happyHour.endTurn();
+    }
 
     /**
      * Every customer who has not been served yet loses satisfaction.
