@@ -1,0 +1,105 @@
+# Stage 3 reproducible DEFEAT run (base setting: Host, combos and Happy Hour)
+# EXPECT: DEFEAT
+# EXPECT: Paid customers: 2
+# EXPECT: Revenue: $25.20
+# EXPECT: Customer #2 (Critic) ran out of patience and LEFT without paying.
+# EXPECT: Customer #1 (Regular): Salad $7.20
+# Mistakes: Happy Hour wasted on turn 1 (only #1 benefits, and their Salad is sold at 20% off),
+# the Host is never used, and the Critic's 3-unit combo is neglected until the Critic leaves.
+# Input order each turn: [Happy Hour? - only until it is used] Host, Waiter, Chef.
+# --- Turn 1: Happy Hour on at once. Host idle; Waiter seats #1
+1
+0
+1
+1
+0
+# --- Turn 2: take #1's order during Happy Hour ($9.00 -20% = $7.20); Chef cooks it
+0
+2
+1
+1
+1
+# --- Turn 3: serve #1
+0
+3
+1
+0
+# --- Turn 4: the Critic arrives; Waiter seats (Host idle)
+0
+1
+1
+0
+# --- Turn 5: take the Critic's combo order; Chef unit 1/3
+0
+2
+1
+1
+1
+# --- Turn 6: Chef waits
+0
+0
+0
+# --- Turn 7: #3 arrives; Waiter seats #3
+0
+1
+1
+0
+# --- Turn 8: take #3's Pasta; Chef works on the Pasta instead of the Critic's combo
+0
+2
+1
+1
+2
+# --- Turn 9: Chef finishes the Pasta
+0
+0
+1
+2
+# --- Turn 10: the VIP arrives (no table). Serve #3; Chef back on the combo (2/3)
+0
+3
+1
+1
+1
+# --- Turn 11: Chef finishes the combo
+0
+0
+1
+1
+# --- Turn 12: the Waiter does not serve the Critic (satisfaction 4), who leaves at turn end
+0
+0
+0
+# --- Turn 13: #5 arrives; Waiter seats the VIP
+0
+1
+1
+0
+# --- Turn 14: Waiter seats #5
+0
+1
+1
+0
+# --- Turn 15: take the VIP's combo order; Chef unit 1/2
+0
+2
+1
+1
+1
+# --- Turn 16: take #5's combo order; Chef finishes the VIP's combo
+0
+2
+1
+1
+1
+# --- Turn 17: serve the VIP; Chef starts #5's combo
+0
+3
+1
+1
+1
+# --- Turn 18: Chef continues #5's combo
+0
+0
+1
+1

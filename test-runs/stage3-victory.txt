@@ -1,0 +1,121 @@
+# Stage 3 reproducible VICTORY run (base setting: Host, combos and Happy Hour)
+# EXPECT: VICTORY
+# EXPECT: Paid customers: 5
+# EXPECT: Revenue: $95.04
+# EXPECT: Average satisfaction of paid customers: 82.4
+# EXPECT: Customer #2 (Critic): Salad + Pasta Combo $24.30, satisfaction 88
+# EXPECT: Customer #4 (VIP): Salad + Burger Combo $19.44
+# EXPECT: Happy Hour: Customer #2 (Critic) cheers up, satisfaction now 100.
+# Board: 1 Salad, 2 Burger, 3 Pasta, 4 Salad + Burger Combo, 5 Salad + Pasta Combo.
+# Orders: #1 Salad, #2 Critic -> Salad + Pasta Combo (most expensive, 3 units), #3 Pasta,
+#         #4 VIP -> Salad + Burger Combo ($21.60 -10% = $19.44), #5 Salad + Pasta Combo, #6 Salad.
+# Input order each turn: [Happy Hour?] Host, Waiter, Chef.
+# --- Turn 1: Host seats #1, so the Waiter can take the order the same turn; Chef cooks it
+0
+1
+1
+2
+1
+1
+1
+# --- Turn 2: serve #1
+0
+0
+3
+1
+0
+# --- Turn 3: quiet turn
+0
+0
+0
+0
+# --- Turn 4: the Critic arrives: Host seats, Waiter takes the 3-unit combo, Chef unit 1/3
+0
+1
+1
+2
+1
+1
+1
+# --- Turn 5: KEY DECISION: switch Happy Hour on while the Critic waits for food
+#     (no order is taken during Happy Hour, so no revenue is lost). Chef unit 2/3.
+1
+0
+0
+1
+1
+# --- Turn 6: Happy Hour turn 2: the Critic recovers again. Chef finishes the combo.
+0
+0
+1
+1
+# --- Turn 7: #3 arrives: Host seats them; Waiter serves the Critic (88)
+1
+1
+3
+1
+0
+# --- Turn 8: take #3's order (Pasta), Chef unit 1/2
+0
+2
+1
+1
+1
+# --- Turn 9: Chef finishes the Pasta; Cashier collects the Critic
+0
+0
+1
+1
+# --- Turn 10: the VIP arrives: Host seats; Waiter serves #3
+1
+1
+3
+1
+0
+# --- Turn 11: take the VIP's order (combo), Chef unit 1/2
+0
+2
+1
+1
+1
+# --- Turn 12: Chef finishes the VIP's combo; Cashier collects #3
+0
+0
+1
+1
+# --- Turn 13: #5 arrives: Host seats; KEY DECISION: Waiter takes #5's 3-unit combo order first
+#     (the patient VIP can wait a turn to be served) so #5 can still pay by turn 18
+1
+1
+2
+1
+1
+1
+# --- Turn 14: serve the VIP; Chef unit 2/3
+0
+3
+1
+1
+1
+# --- Turn 15: Chef finishes #5's combo
+0
+0
+1
+1
+# --- Turn 16: #6 arrives but no table is free when the Host acts; Waiter serves #5. Cashier collects the VIP.
+0
+3
+1
+0
+# --- Turn 17: Host seats #6, Waiter takes the order (Salad), Chef cooks it
+1
+1
+2
+1
+1
+1
+# --- Turn 18: serve #6; Cashier collects #5
+0
+3
+1
+0
