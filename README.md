@@ -81,20 +81,6 @@ The staff package and the rest of the turn loop did not change.
 
 Earlier behaviour still works: the Stage 1 and Stage 2 scripts replay on this code with the same results.
 
-## Links and video timestamps
-
-- Repository: https://github.com/ArkzFX/restaurant-rush-project
-- Stages: 
-  [stage-1](https://github.com/ArkzFX/restaurant-rush-project/tree/stage-1) ·
-  [stage-2](https://github.com/ArkzFX/restaurant-rush-project/tree/stage-2) ·
-  [stage-3](https://github.com/ArkzFX/restaurant-rush-project/tree/stage-3)
-- Compare: 
-  [stage-1...stage-2](https://github.com/ArkzFX/restaurant-rush-project/compare/stage-1...stage-2) ·
-  [stage-2...stage-3](https://github.com/ArkzFX/restaurant-rush-project/compare/stage-2...stage-3)
-- AI history: [Nikita](LINK) · [Aariv](LINK) · [Kai](LINK) · [Junweng](LINK) · [Esther](LINK)
-- AI-history links: replace each LINK once that member's branch exists, for example https://github.com/ArkzFX/restaurant-rush-project/tree/junweng/ai-history.
-- Video table: fill in the Presenter column using the video script (1 Nikita, 2 Junweng, 3 Aariv, 4 Kai, 5 Kai, 6 Junweng, 7 Esther). Add timestamps after recording.
-
 ## Reproducible runs
 
 Each script in `test-runs/` is plain game input with `# EXPECT:` lines. Replay one with
@@ -115,11 +101,18 @@ Happy Hour = $10.80; the Pasta timeline from the brief; a dish finished this tur
 - `docs/class-diagram-stage1.puml`, `class-diagram-stage2.puml`, `class-diagram-stage3.puml` (and `.png`)
 - `docs/sequence-diagram-stage3.puml` (and `.png`): the Critic's combo order with Happy Hour, from arrival to payment and the result check
 
-## Links and video timestamps (to fill in)
+## Links and video timestamps
 
-- Repository: [add URL]
-- Tags: `stage-1`, `stage-2`, `stage-3` and compare links: [add]
-- Each member's AI history: [add links to the `ai-history/` folders on each member branch]
+- Repository: https://github.com/ArkzFX/restaurant-rush-project
+- Stages: 
+  [stage-1](https://github.com/ArkzFX/restaurant-rush-project/tree/stage-1) ·
+  [stage-2](https://github.com/ArkzFX/restaurant-rush-project/tree/stage-2) ·
+  [stage-3](https://github.com/ArkzFX/restaurant-rush-project/tree/stage-3)
+- Compare: 
+  [stage-1...stage-2](https://github.com/ArkzFX/restaurant-rush-project/compare/stage-1...stage-2) ·
+  [stage-2...stage-3](https://github.com/ArkzFX/restaurant-rush-project/compare/stage-2...stage-3)
+
+- Video table: 
 
 | # | Segment | Presenter | Timestamp |
 |---|---|---|---|
