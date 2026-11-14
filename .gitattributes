@@ -1,0 +1,3 @@
+# Shell scripts and scripted game inputs must keep Unix line endings so they run in Git Bash
+*.sh text eol=lf
+test-runs/*.txt text eol=lf
