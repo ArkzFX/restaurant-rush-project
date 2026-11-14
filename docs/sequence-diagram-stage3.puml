@@ -1,0 +1,154 @@
+@startuml RestaurantRush_Sequence
+' Scenario (Stage 3 base setting, test-runs/stage3-victory.txt, turns 4-9 and the final check):
+' the Critic arrives, orders the most expensive item (a 3-unit combo), the manager switches
+' Happy Hour on while the combo cooks, the dish goes READY -> SERVED, the Critic eats and pays.
+' Manager choice that changes the outcome: Happy Hour on turn 5 means the Critic recovers
+' twice and pays with satisfaction 88 instead of 64.
+skinparam shadowing false
+mainframe sd CriticComboOrderWithHappyHour
+title Stage 3 use case: a Critic's combo order, where starting Happy Hour changes the outcome
+legend top left
+  <b>Stage:</b> 3, base setting (replayed by test-runs/stage3-victory.txt, turns 4 to 9 and the final check)
+  <b>Starting conditions:</b> turn 4, Table 2 is free, Customer #2 (Critic) arrives with satisfaction 100, Happy Hour not used yet
+  <b>Manager choice:</b> start Happy Hour on turn 5 while the 3-unit combo is cooking
+  <b>Outcome:</b> the combo is served on turn 7 and the Critic pays $24.30 on turn 9 with satisfaction 88
+  (64 without Happy Hour); the game ends in VICTORY with 5 paid, $95.04, average 82.4
+endlegend
+skinparam sequenceMessageAlign center
+autonumber
+
+actor Manager
+participant ":ConsoleUI" as UI
+participant ":GameController" as GC
+participant ":Arrival" as AR
+participant ":Restaurant" as R
+participant "critic:CriticCustomer" as C
+participant ":Menu" as M
+participant "order:Order" as O
+participant ":HappyHour" as HH
+participant "seat:SeatCustomerTask" as ST
+participant "take:TakeOrderTask" as TT
+participant "prep:PrepareOrderTask" as PT
+participant "serve:ServeOrderTask" as SV
+participant ":Cashier" as CA
+participant ":Objective" as OBJ
+
+loop turn = 1 .. 18
+  GC -> R : startTurn(turn)
+
+  == Turn 4: arrival, Host seats, Waiter takes the order, Chef starts ==
+  GC -> GC : arrivingOn(4)
+  GC -> AR : createCustomer(2)
+  create C
+  AR -> C : <<create>> new CriticCustomer(2, 4)
+  AR --> GC : critic
+  GC -> R : admit(critic)
+  GC -> UI : showState(restaurant, staff)
+  GC -> UI : offerHappyHour()
+  Manager -> UI : 0 (not now)
+  UI --> GC : false
+
+  group Host (directStaff)
+    GC -> UI : chooseTask(host)
+    Manager -> UI : 1 (seat)
+    GC -> ST : candidates(restaurant)
+    ST -> R : firstFreeTable()
+    alt no free table or empty queue
+      GC -> UI : showError(whyUnavailable())
+      note right: manager chooses again;\nthe task is not used up
+    else candidates available
+      GC -> UI : chooseTarget(targetLabels)
+      Manager -> UI : 1 (critic)
+      GC -> ST : perform(restaurant, critic)
+      ST -> R : seat(critic)
+      R -> C : seatAt(table2)
+    end
+  end
+
+  group Waiter (directStaff)
+    GC -> UI : chooseTask(waiter)
+    Manager -> UI : 2 (take order)
+    GC -> TT : perform(restaurant, critic)
+    TT -> R : takeOrder(critic)
+    R -> C : chooseItem(menu)
+    note right of C : polymorphic: Critic overrides\nthe default rotation rule
+    C -> M : mostExpensive()
+    M --> C : Salad + Pasta Combo
+    R -> R : quoteBill(critic, combo)
+    R -> C : applyDiscount(2430)
+    C --> R : 2430 (Critic pays full price)
+    R -> HH : apply(2430)
+    alt Happy Hour active
+      HH --> R : 80% of price
+    else inactive
+      HH --> R : 2430
+    end
+    create O
+    R -> O : <<create>> (critic, combo, bill 2430, turn 4)
+    R -> C : placeOrder(order)
+  end
+
+  group Chef (directStaff), turns 4, 5 and 6
+    GC -> PT : perform(restaurant, order)
+    PT -> R : prepare(order)
+    R -> O : prepareOneUnit(turn)
+    alt unitsDone == 3
+      O -> O : status = READY, turnReady = turn
+    else else
+      O -> O : status = PREPARING
+    end
+  end
+
+  == Turn 5: the manager's decision ==
+  GC -> UI : offerHappyHour()
+  Manager -> UI : 1 (start Happy Hour)
+  UI --> GC : true
+  GC -> HH : activate()
+  loop Happy Hour active: turns 5 and 6
+    GC -> R : applyHappyHourRecovery()
+    R -> C : recover(15)
+    note right of C : 88 -> 100 at the start of\nturns 5 and 6 (cap 100)
+  end
+
+  == Turn 7: READY -> SERVED ==
+  GC -> SV : candidates(restaurant)
+  SV -> R : servableOrders()
+  R -> O : isServableOn(7)
+  O --> R : true [READY since turn 6 < 7]
+  GC -> SV : perform(restaurant, order)
+  SV -> R : serve(order)
+  R -> O : markServed(7)
+  R -> C : receiveFood(7)
+  note right of C : status EATING; satisfaction\nfrozen at 88
+
+  == Turn 8: eating ==
+  GC -> R : finishEating()
+  R -> C : finishEatingIfDone(8)
+  C --> R : true [servedTurn 7 < 8] -> READY_TO_PAY
+
+  == Turn 9: payment ==
+  GC -> CA : processPayment(restaurant)
+  CA -> R : nextCustomerToPay()
+  R -> C : canPayOn(9)
+  C --> R : true [readyToPayTurn 8 < 9]
+  CA -> R : collectPayment(critic)
+  R -> C : pay()
+  C -> O : markPaid()
+  C -> C : paidSatisfaction = 88, release table
+  R -> R : revenueCents += 2430
+
+  == every turn: end ==
+  GC -> R : applyWaitingPenalties()
+  GC -> R : endTurn()
+  R -> HH : endTurn()
+  GC -> UI : showEndOfTurn(turn, 18, restaurant)
+end
+
+== after turn 18: result check ==
+GC -> OBJ : isMetBy(restaurant)
+OBJ -> R : countPaid(), getRevenueCents(), averagePaidSatisfaction()
+OBJ --> GC : true (5 paid, $95.04, average 82.4)
+GC -> OBJ : checklist(restaurant)
+GC -> UI : showFinalResult(true, checklist, restaurant, 18)
+UI -> Manager : VICTORY
+@enduml
