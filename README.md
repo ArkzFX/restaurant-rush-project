@@ -39,6 +39,8 @@ Arrivals: turn 1 Regular, 4 **Critic**, 7 Regular, 10 **VIP**, 13 Regular, 16 Re
 
 ## What changed from Stage 1
 
+Compare: https://github.com/ArkzFX/restaurant-rush-project/compare/stage-1...stage-2     ← NEW
+
 | File | Change | Reason |
 |---|---|---|
 | `entity/RegularCustomer.java` | new | Regular behaviour moved out of `Customer` |
