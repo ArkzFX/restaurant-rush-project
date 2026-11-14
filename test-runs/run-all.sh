@@ -5,6 +5,8 @@ cd "$(dirname "$0")/.." || exit 1
 ./build.sh > /dev/null || exit 1
 mkdir -p test-runs/output
 status=0
+# classpath separator: ";" on Windows, ":" elsewhere
+case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) SEP=";" ;; *) SEP=":" ;; esac
 for script in test-runs/*.txt; do
     name=$(basename "$script" .txt)
     log="test-runs/output/$name.log"
