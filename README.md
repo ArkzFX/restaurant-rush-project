@@ -58,13 +58,14 @@ Compare: https://github.com/ArkzFX/restaurant-rush-project/compare/stage-1...sta
 | `control/GameConfig.java`, `Main.java` | changed | registration: new arrival mix; `--stage1` keeps the old setting selectable |
 | `control/GameController.java` | changed | one message string only; the turn loop has no customer type checks |
 | `test-runs/stage2-*.txt` | new | Stage 2 victory and defeat |
-| `test-runs/stage1-*.txt` | changed | one `y replay on this code |
+| `test-runs/stage1-*.txt` | changed | one `# ARGS: --stage1` line so they replay on this code |
 | `test-runs/run-all.sh` | changed | reads each script's `# ARGS:` line so earlier stages can be replayed |
-| `docs/class-diagram-stage2.puml` / `.png`  |
+| `docs/class-diagram-stage2.puml` / `.png` | new | Stage 2 class diagram |
 
 The staff package and the rest of the turn loop did not change.
 
 ## What changed from Stage 2
+
 Compare: https://github.com/ArkzFX/restaurant-rush-project/compare/stage-2...stage-3
 
 | File | Change | Reason |
