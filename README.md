@@ -1,7 +1,7 @@
-# Restaurant Rush - Stage 2: customer behaviour
+# Restaurant Rush - Stage 3: Host, combo meals and Happy Hour
 
-This is the **Stage 2** version. It extends Stage 1 with VIP and Critic customers.
-Run `java -cp out rush.Main` for the Stage 2 game, or add `--stage1` to replay the Stage 1 setting.
+This folder is the **Stage 3** (final) version. `java -cp out rush.Main` plays the base setting with every
+feature. Add `--stage2` or `--stage1` to replay the earlier settings on the same code.
 
 ## Build and run
 
@@ -29,48 +29,67 @@ Each turn runs the six steps from the brief: arrivals, manager choices, kitchen 
 payment, waiting and abandonment, results. The goal after turn 18 is at least 4 paid customers,
 revenue of at least $45.00 and an average satisfaction of paid customers of at least 60.
 
-| Customer | Loss per waiting turn | Bill | Food choice |
-|---|---|---|---|
-| Regular | 8 | full price | n-th arrival orders the n-th item on the board, wrapping |
-| VIP | 5 | 10% off | same rule as Regular |
-| Critic | 12 | full price | always the most expensive item (Pasta) |
+**Host:** seats at most one queued customer per turn, before the Waiter acts. The Waiter can still seat customers.
 
-Arrivals: turn 1 Regular, 4 **Critic**, 7 Regular, 10 **VIP**, 13 Regular, 16 Regular.
+**Combo meals:** two combos listed after the single dishes: Salad + Burger ($21.60, 2 units) and
+Salad + Pasta ($24.30, 3 units). Price is 90% of the two components, to the nearest cent; units are the sum.
+Because they come after the dishes, the 4th and 5th arrival of each cycle order a combo, and a Critic orders
+the Salad + Pasta Combo.
 
-## What changed from Stage 1
+**Happy Hour:** once per game, at the start of a turn. It lasts that turn and the next, and the remaining
+duration is shown. Orders taken while it is on get 20% off, after any VIP discount, and the price is locked
+when the order is taken. Customers still waiting for a table or food recover 15 satisfaction (max 100) at
+the start of each active turn.
 
-Compare: https://github.com/ArkzFX/restaurant-rush-project/compare/stage-1...stage-2     ← NEW
+## What changed from Stage 2
 
 | File | Change | Reason |
 |---|---|---|
-| `entity/RegularCustomer.java` | new | Regular behaviour moved out of `Customer` |
-| `entity/VIPCustomer.java` | new | loss 5, overrides `applyDiscount` (10% off) |
-| `entity/CriticCustomer.java` | new | loss 12, overrides `chooseItem` (most expensive item) |
-| `control/CustomerType.java` | new | names the kinds of customer a schedule can contain |
-| `entity/Customer.java` | changed | made abstract; loss, type name and traits became hooks; added `applyDiscount` |
-| `control/Arrival.java` | changed | each arrival now carries a type and builds the matching customer |
-| `entity/Restaurant.java` | changed | the bill now asks the customer for its discount |
-| `entity/Menu.java`, `entity/Money.java` | changed | added `mostExpensive()` and `percentOf()` |
-| `control/GameConfig.java`, `Main.java` | changed | registration: new arrival mix; `--stage1` keeps the old setting selectable |
-| `control/GameController.java` | changed | one message string only; the turn loop has no customer type checks |
-| `test-runs/stage2-*.txt` | new | Stage 2 victory and defeat |
-| `test-runs/stage1-*.txt` | changed | one `# ARGS: --stage1` line so they replay on this code |
-| `test-runs/run-all.sh` | changed | reads each script's `# ARGS:` line so earlier stages can be replayed |     ← NEW
-| `docs/class-diagram-stage2.puml` / `.png` | new | Stage 2 class diagram |     ← NEW
+| `staff/Host.java` | new | reuses the existing `SeatCustomerTask`, so seating rules are not duplicated |
+| `entity/ComboMeal.java` | new | a `MenuItem` made of two `MenuItem`s; price and units are derived |
+| `entity/HappyHour.java` | new | once-per-game, two-turn pricing policy with recovery |
+| `test/rush/entity/RulesTest.java` | new | checks the brief's worked examples and timing rules |
+| `entity/Restaurant.java` | changed | owns the `HappyHour`; the bill applies it after the customer discount; recovery and `endTurn()` |
+| `entity/Customer.java` | changed | added `recover(points)`; no customer subclass changed |
+| `control/GameController.java` | changed | `startOfTurnPolicies()` and an `endTurn()` call; the staff loop is unchanged because the Host is registered in the config |
+| `control/GameConfig.java`, `Main.java` | changed | combo menu, Host and Happy Hour flags, `--stage2` setting |
+| `boundary/ConsoleUI.java` | changed | Happy Hour status and prompt; numbered menu board |
+| `test-runs/*`, `run-all.sh` | new / changed | Stage 3 runs; the script now also runs `RulesTest` |
 
-The staff package and the rest of the turn loop did not change.
+Earlier behaviour still works: the Stage 1 and Stage 2 scripts replay on this code with the same results.
 
 ## Reproducible runs
 
 Each script in `test-runs/` is plain game input with `# EXPECT:` lines. Replay one with
 `java -cp out rush.Main --echo [flags] < test-runs/<file>.txt`, or run them all with `./test-runs/run-all.sh`.
 
-| Script | Result |
-|---|---|
-| `stage1-victory.txt`, `stage1-defeat.txt` | same results as Stage 1 (earlier behaviour still works) |
-| `stage2-victory.txt` | VICTORY: 5 paid, $68.10, average 75.4 |
-| `stage2-defeat.txt` | DEFEAT: Critic served at satisfaction 4; 3 paid, $45.00, average 20.0 |
+| Script | Setting | Result |
+|---|---|---|
+| `stage1-victory.txt`, `stage1-defeat.txt` | `--stage1` | same as Stage 1 |
+| `stage2-victory.txt`, `stage2-defeat.txt` | `--stage2` | same as Stage 2 |
+| `stage3-victory.txt` | base | VICTORY: 5 paid, $95.04, average 82.4 (Happy Hour on turn 5 lifts the Critic) |
+| `stage3-defeat.txt` | base | DEFEAT: Happy Hour wasted on turn 1, Host unused, Critic leaves; 2 paid, $25.20 |
+
+`./test-runs/run-all.sh` also runs `RulesTest`: Salad + Pasta Combo = $24.30 and 3 units; a VIP Burger in
+Happy Hour = $10.80; the Pasta timeline from the brief; a dish finished this turn cannot be served.
 
 ## Diagrams
 
-`docs/class-diagram-stage1.puml` and `docs/class-diagram-stage2.puml` (sources and `.png` images).
+- `docs/class-diagram-stage1.puml`, `class-diagram-stage2.puml`, `class-diagram-stage3.puml` (and `.png`)
+- `docs/sequence-diagram-stage3.puml` (and `.png`): the Critic's combo order with Happy Hour, from arrival to payment and the result check
+
+## Links and video timestamps (to fill in)
+
+- Repository: [add URL]
+- Tags: `stage-1`, `stage-2`, `stage-3` and compare links: [add]
+- Each member's AI history: [add links to the `ai-history/` folders on each member branch]
+
+| # | Segment | Presenter | Timestamp |
+|---|---|---|---|
+| 1 | Game launching from the submitted project | | |
+| 2 | Meaningful manager choices, including a constrained decision | | |
+| 3 | A dish going READY -> SERVED -> payment | | |
+| 4 | A VIP or Critic behaviour | | |
+| 5 | A Stage 3 feature | | |
+| 6 | One victory and one defeat | | |
+| 7 | Stage tag comparisons and the diagrams | | |
