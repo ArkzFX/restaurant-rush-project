@@ -24,6 +24,17 @@ public class Menu {
         return items.size();
     }
 
+    /** The priciest item on the board (the first one listed if several share the top price). */
+    public MenuItem mostExpensive() {
+        MenuItem best = items.get(0);
+        for (MenuItem item : items) {
+            if (item.getPriceCents() > best.getPriceCents()) {
+                best = item;
+            }
+        }
+        return best;
+    }
+
     /** Returns the item at the given board position, wrapping around the end of the board. */
     public MenuItem itemAt(int position) {
         return items.get(Math.floorMod(position, items.size()));
