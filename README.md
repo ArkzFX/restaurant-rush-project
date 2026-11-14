@@ -65,6 +65,7 @@ Compare: https://github.com/ArkzFX/restaurant-rush-project/compare/stage-1...sta
 The staff package and the rest of the turn loop did not change.
 
 ## What changed from Stage 2
+Compare: https://github.com/ArkzFX/restaurant-rush-project/compare/stage-2...stage-3
 
 | File | Change | Reason |
 |---|---|---|
@@ -78,6 +79,8 @@ The staff package and the rest of the turn loop did not change.
 | `control/GameConfig.java`, `Main.java` | changed | combo menu, Host and Happy Hour flags, `--stage2` setting |
 | `boundary/ConsoleUI.java` | changed | Happy Hour status and prompt; numbered menu board |
 | `test-runs/*`, `run-all.sh` | new / changed | Stage 3 runs; the script now also runs `RulesTest` |
+| `test-runs/stage2-*.txt` | changed | one `# ARGS: --stage2` line so they replay on this code |
+| `docs/class-diagram-stage3.puml`, `docs/sequence-diagram-stage3.puml` (and `.png`) | new | Stage 3 class diagram and sequence diagram |
 
 Earlier behaviour still works: the Stage 1 and Stage 2 scripts replay on this code with the same results.
 
