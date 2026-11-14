@@ -1,0 +1,86 @@
+# Stage 1 reproducible VICTORY run (base setting, all Regular customers)
+# EXPECT: VICTORY
+# EXPECT: Revenue: $66.00
+# EXPECT: Average satisfaction of paid customers: 79.2
+# EXPECT: Paid customers: 5
+# Customers order by arrival number: #1 Salad, #2 Burger, #3 Pasta, #4 Salad, #5 Burger, #6 Pasta
+# --- Turn 1: Waiter seats #1. Chef tries to prepare (rejected: nothing to cook), then waits.
+1
+1
+1
+abc
+0
+# --- Turn 2: Waiter takes #1's order (Salad). Chef cooks it -> READY.
+2
+1
+1
+1
+# --- Turn 3: Waiter serves the Salad. Chef waits.
+3
+1
+0
+# --- Turn 4: #2 arrives. Waiter seats #2. Chef waits.
+1
+1
+0
+# --- Turn 5: Waiter takes #2's order (Burger). Chef cooks it. Cashier collects #1.
+2
+1
+1
+1
+# --- Turn 6: Waiter serves the Burger. Chef waits.
+3
+1
+0
+# --- Turn 7: #3 arrives. Waiter seats #3. Chef waits.
+1
+1
+0
+# --- Turn 8: Waiter takes #3's order (Pasta). Chef unit 1/2. Cashier collects #2.
+2
+1
+1
+1
+# --- Turn 9: Waiter has nothing to do. Chef unit 2/2 -> READY.
+0
+1
+1
+# --- Turn 10: #4 arrives. KEY DECISION: serve the Pasta first; #4 waits one turn in the queue.
+3
+1
+0
+# --- Turn 11: Waiter seats #4. Chef waits.
+1
+1
+0
+# --- Turn 12: Waiter takes #4's order (Salad). Chef cooks it. Cashier collects #3.
+2
+1
+1
+1
+# --- Turn 13: #5 arrives. Serve #4's Salad first.
+3
+1
+0
+# --- Turn 14: Waiter seats #5. Chef waits.
+1
+1
+0
+# --- Turn 15: Waiter takes #5's order (Burger). Chef cooks it. Cashier collects #4.
+2
+1
+1
+1
+# --- Turn 16: #6 arrives. Serve #5's Burger first.
+3
+1
+0
+# --- Turn 17: Waiter seats #6. Chef waits.
+1
+1
+0
+# --- Turn 18: Waiter takes #6's order (Pasta). Chef unit 1/2. Cashier collects #5.
+2
+1
+1
+1

@@ -1,0 +1,80 @@
+# Stage 1 reproducible DEFEAT run (base setting, all Regular customers)
+# EXPECT: DEFEAT
+# EXPECT: Revenue: $24.00
+# EXPECT: Paid customers: 2
+# EXPECT: Average satisfaction of paid customers: 36.0
+# Strategy: the Waiter seats and takes orders, but the manager keeps the Chef idle
+# until turn 9. Tables stay blocked, the queue grows and satisfaction collapses.
+# --- Turn 1: seat #1, Chef waits
+1
+1
+0
+# --- Turn 2: take #1's order (Salad), Chef waits
+2
+1
+0
+# --- Turn 3: both wait
+0
+0
+# --- Turn 4: seat #2, Chef waits
+1
+1
+0
+# --- Turn 5: take #2's order (Burger), Chef waits
+2
+1
+0
+# --- Turn 6: both wait
+0
+0
+# --- Turn 7: #3 arrives; seating fails (both tables occupied), so the Waiter waits
+1
+0
+0
+# --- Turn 8: both wait
+0
+0
+# --- Turn 9: kitchen finally opens: Chef cooks #1's Salad
+0
+1
+1
+# --- Turn 10: serve #1, Chef cooks #2's Burger
+3
+1
+1
+1
+# --- Turn 11: serve #2, Chef waits
+3
+1
+0
+# --- Turn 12: still no free table when the Waiter acts (Cashier frees one later this turn)
+1
+0
+0
+# --- Turn 13: seat #3 (oldest in queue)
+1
+1
+0
+# --- Turn 14: seat #4
+1
+1
+0
+# --- Turn 15: take #3's order (Pasta), Chef unit 1/2
+2
+1
+1
+1
+# --- Turn 16: take #4's order (Salad), Chef finishes the Pasta
+2
+1
+1
+1
+# --- Turn 17: serve the Pasta, Chef cooks the Salad
+3
+1
+1
+1
+# --- Turn 18: serve the Salad, Chef waits
+3
+1
+0
