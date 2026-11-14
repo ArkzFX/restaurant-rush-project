@@ -1,5 +1,6 @@
 package rush.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,13 +13,14 @@ public class ComboMeal extends MenuItem {
 
     private static final int PERCENT_PAYABLE = 90;
 
-    private final List<MenuItem> components;
+    private final List<MenuItem> components = new ArrayList<>();
 
     public ComboMeal(MenuItem first, MenuItem second) {
         super(first.getName() + " + " + second.getName() + " Combo",
                 Money.percentOf(first.getPriceCents() + second.getPriceCents(), PERCENT_PAYABLE),
                 first.getPreparationUnits() + second.getPreparationUnits());
-        this.components = List.of(first, second);
+        components.add(first);
+        components.add(second);
     }
 
     public List<MenuItem> getComponents() {
@@ -27,7 +29,10 @@ public class ComboMeal extends MenuItem {
 
     @Override
     public String describe() {
-        int fullPrice = components.stream().mapToInt(MenuItem::getPriceCents).sum();
+        int fullPrice = 0;
+        for (MenuItem component : components) {
+            fullPrice += component.getPriceCents();
+        }
         return super.describe() + " [combo: 10% off " + Money.format(fullPrice) + "]";
     }
 }
