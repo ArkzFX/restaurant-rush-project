@@ -1,4 +1,5 @@
 # Stage 1 reproducible DEFEAT run (base setting, all Regular customers)
+# ARGS: --stage1
 # EXPECT: DEFEAT
 # EXPECT: Revenue: $24.00
 # EXPECT: Paid customers: 2
