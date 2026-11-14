@@ -5,11 +5,14 @@ package rush.entity;
  * other objects can only change them through the life-cycle methods below,
  * which enforce the legal order: WAITING -> SEATED -> ORDERED -> EATING
  * -> READY_TO_PAY -> PAID (or LEFT at any point before being served).
+ *
+ * <p>The flow is the same for every kind of customer. What differs (patience,
+ * discount, food preference) is supplied by subclasses through the hook
+ * methods, so the rest of the game never needs to check a customer's type.
  */
-public class Customer {
+public abstract class Customer {
 
     public static final int MAX_SATISFACTION = 100;
-    private static final int SATISFACTION_LOSS_PER_TURN = 8;
 
     private final int id;
     private final int arrivalTurn;
@@ -21,27 +24,33 @@ public class Customer {
     private int readyToPayTurn;
     private int paidSatisfaction;
 
-    public Customer(int id, int arrivalTurn) {
+    protected Customer(int id, int arrivalTurn) {
         this.id = id;
         this.arrivalTurn = arrivalTurn;
     }
 
+    // behaviour that varies by customer type
+
     /**
-     * Food choice rule: the n-th customer to arrive orders the n-th item on the
-     * menu board, wrapping around (Salad, Burger, Pasta, Salad, ...).
+     * Default food choice rule: the n-th customer to arrive orders the n-th item
+     * on the menu board, wrapping around (Salad, Burger, Pasta, Salad, ...).
      */
     public MenuItem chooseItem(Menu menu) {
         return menu.itemAt(id - 1);
     }
 
     /** Points lost at the end of each turn while not yet served. */
-    public int getSatisfactionLoss() {
-        return SATISFACTION_LOSS_PER_TURN;
+    public abstract int getSatisfactionLoss();
+
+    /** Applies this customer's own discount to a list price. Default: no discount. */
+    public int applyDiscount(int priceCents) {
+        return priceCents;
     }
 
-    public String getTypeName() {
-        return "Regular";
-    }
+    public abstract String getTypeName();
+
+    /** Short explanation of how this customer type behaves, shown on arrival. */
+    public abstract String describeTraits();
 
     // life cycle (package-private: only the Restaurant drives it)
 
