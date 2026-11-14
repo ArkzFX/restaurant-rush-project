@@ -1,0 +1,87 @@
+# Stage 2 reproducible VICTORY run (base setting: #2 is a Critic, #4 is a VIP)
+# EXPECT: VICTORY
+# EXPECT: Paid customers: 5
+# EXPECT: Revenue: $68.10
+# EXPECT: Average satisfaction of paid customers: 75.4
+# EXPECT: Customer #2 (Critic): Pasta $18.00
+# EXPECT: Customer #4 (VIP): Salad $8.10
+# Orders: #1 Salad, #2 Critic -> Pasta (most expensive, not Burger), #3 Pasta, #4 VIP Salad (10% off), #5 Burger, #6 Pasta
+# --- Turn 1: seat #1
+1
+1
+0
+# --- Turn 2: take #1's order, Chef cooks the Salad
+2
+1
+1
+1
+# --- Turn 3: serve #1
+3
+1
+0
+# --- Turn 4: the Critic arrives (loses 12 per turn) - seat at once
+1
+1
+0
+# --- Turn 5: take the Critic's order: Pasta. Chef unit 1/2. Cashier collects #1.
+2
+1
+1
+1
+# --- Turn 6: Waiter idle, Chef finishes the Pasta
+0
+1
+1
+# --- Turn 7: #3 arrives. KEY DECISION: serve the impatient Critic first; #3 waits in the queue
+3
+1
+0
+# --- Turn 8: seat #3
+1
+1
+0
+# --- Turn 9: take #3's order (Pasta), Chef unit 1/2. Cashier collects the Critic.
+2
+1
+1
+1
+# --- Turn 10: the VIP arrives - seat them; Chef finishes #3's Pasta
+1
+1
+1
+1
+# --- Turn 11: serve #3 (the patient VIP can wait to order)
+3
+1
+0
+# --- Turn 12: take the VIP's order (Salad, 10% off = $8.10), Chef cooks it
+2
+1
+1
+1
+# --- Turn 13: #5 arrives. Serve the VIP. Cashier collects #3.
+3
+1
+0
+# --- Turn 14: seat #5
+1
+1
+0
+# --- Turn 15: take #5's order (Burger), Chef cooks it. Cashier collects the VIP.
+2
+1
+1
+1
+# --- Turn 16: #6 arrives. Serve #5.
+3
+1
+0
+# --- Turn 17: seat #6
+1
+1
+0
+# --- Turn 18: take #6's order, Chef starts it. Cashier collects #5.
+2
+1
+1
+1

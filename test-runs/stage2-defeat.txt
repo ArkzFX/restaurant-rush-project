@@ -1,0 +1,76 @@
+# Stage 2 reproducible DEFEAT run (base setting: #2 is a Critic, #4 is a VIP)
+# EXPECT: DEFEAT
+# EXPECT: Paid customers: 3
+# EXPECT: Revenue: $45.00
+# EXPECT: Customer #2 (Critic): Pasta $18.00, satisfaction 4
+# Strategy: kitchen kept idle until turn 9. The impatient Critic drops 12 a turn and is
+# served with satisfaction 4. Revenue reaches $45 but only 3 customers pay and the
+# average satisfaction collapses, so two of the three targets fail.
+# --- Turns 1-2: seat #1, take its order; Chef waits
+1
+1
+0
+2
+1
+0
+# --- Turn 3: both wait
+0
+0
+# --- Turns 4-5: seat the Critic, take its order (Pasta); Chef waits
+1
+1
+0
+2
+1
+0
+# --- Turns 6-8: everybody waits (#3 arrives on turn 7, but both tables are taken)
+0
+0
+0
+0
+0
+0
+# --- Turn 9: Chef finally cooks #1's Salad
+0
+1
+1
+# --- Turn 10: the VIP arrives. Serve #1, Chef starts the Critic's Pasta
+3
+1
+1
+1
+# --- Turn 11: no free table; Chef finishes the Pasta
+0
+1
+1
+# --- Turn 12: serve the Critic (satisfaction already down to 4)
+3
+1
+0
+# --- Turn 13: seat #3
+1
+1
+0
+# --- Turn 14: take #3's order (Pasta), Chef unit 1/2
+2
+1
+1
+1
+# --- Turn 15: seat the VIP, Chef finishes #3's Pasta
+1
+1
+1
+1
+# --- Turn 16: serve #3
+3
+1
+0
+# --- Turn 17: take the VIP's order (Salad), Chef cooks it
+2
+1
+1
+1
+# --- Turn 18: serve the VIP
+3
+1
+0
