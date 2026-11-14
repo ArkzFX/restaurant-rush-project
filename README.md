@@ -53,6 +53,8 @@ Arrivals: turn 1 Regular, 4 **Critic**, 7 Regular, 10 **VIP**, 13 Regular, 16 Re
 | `control/GameController.java` | changed | one message string only; the turn loop has no customer type checks |
 | `test-runs/stage2-*.txt` | new | Stage 2 victory and defeat |
 | `test-runs/stage1-*.txt` | changed | one `# ARGS: --stage1` line so they replay on this code |
+| `test-runs/run-all.sh` | changed | reads each script's `# ARGS:` line so earlier stages can be replayed |     ← NEW
+| `docs/class-diagram-stage2.puml` / `.png` | new | Stage 2 class diagram |     ← NEW
 
 The staff package and the rest of the turn loop did not change.
 
