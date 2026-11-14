@@ -65,14 +65,14 @@ public class Restaurant {
     /** The customer picks their own food; the bill is fixed now. */
     public Order takeOrder(Customer customer) {
         MenuItem item = customer.chooseItem(menu);
-        Order order = new Order(customer, item, quoteBill(item), currentTurn);
+        Order order = new Order(customer, item, quoteBill(customer, item), currentTurn);
         customer.placeOrder(order);
         return order;
     }
 
-    /** Price the customer will pay for an item ordered right now. */
-    public int quoteBill(MenuItem item) {
-        return item.getPriceCents();
+    /** Price this customer will pay for an item ordered right now, after their own discount. */
+    public int quoteBill(Customer customer, MenuItem item) {
+        return customer.applyDiscount(item.getPriceCents());
     }
 
     /** @return true if this unit made the order READY */
