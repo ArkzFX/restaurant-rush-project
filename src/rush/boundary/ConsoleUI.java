@@ -8,6 +8,7 @@ import rush.control.Arrival;
 import rush.control.GameConfig;
 import rush.entity.Customer;
 import rush.entity.CustomerStatus;
+import rush.entity.HappyHour;
 import rush.entity.MenuItem;
 import rush.entity.Money;
 import rush.entity.Restaurant;
@@ -45,13 +46,18 @@ public class ConsoleUI {
         out.println(RULE);
         out.println(" RESTAURANT RUSH  -  " + config.getName());
         out.println(RULE);
-        out.println("You are the manager. Each turn you give the Waiter and the Chef one task each.");
+        out.println("You are the manager. Each turn you give every member of staff one task (or Wait).");
         out.println("Turns: " + config.getMaxTurns() + "   Tables: " + config.getTableCount()
                 + "   Arrivals on turns: " + arrivalTurns(config));
         out.println("Goal after turn " + config.getMaxTurns() + ": " + config.getObjective().describe() + ".");
-        out.println("Menu (customers choose their own food):");
-        for (MenuItem item : config.getMenu().getItems()) {
-            out.println("  " + item.describe());
+        out.println("Menu board (customers choose their own food):");
+        List<MenuItem> items = config.getMenu().getItems();
+        for (int i = 0; i < items.size(); i++) {
+            out.println("  " + (i + 1) + ". " + items.get(i).describe());
+        }
+        if (config.isHappyHourOffered()) {
+            out.println("Happy Hour: may be switched on once, at the start of a turn, for "
+                    + HappyHour.DURATION_TURNS + " turns.");
         }
     }
 
@@ -79,6 +85,19 @@ public class ConsoleUI {
                 + "   Avg satisfaction (paid): " + formatAverage(restaurant)
                 + "   Paid: " + restaurant.countPaid()
                 + "   Left unhappy: " + restaurant.countUnhappyDepartures());
+
+        HappyHour happyHour = restaurant.getHappyHour();
+        if (happyHour.isOffered()) {
+            String happyHourStatus;
+            if (happyHour.isActive()) {
+                happyHourStatus = "ACTIVE - " + happyHour.getTurnsRemaining() + " turn(s) left including this one";
+            } else if (happyHour.canActivate()) {
+                happyHourStatus = "available (once per game, lasts " + HappyHour.DURATION_TURNS + " turns)";
+            } else {
+                happyHourStatus = "used";
+            }
+            out.println("Happy Hour: " + happyHourStatus);
+        }
 
         List<Customer> queue = restaurant.getWaitingQueue();
         out.println("Waiting queue:" + (queue.isEmpty() ? " (empty)" : ""));
@@ -166,6 +185,14 @@ public class ConsoleUI {
     }
 
     // input
+
+    /** Asks whether to switch on Happy Hour now. */
+    public boolean offerHappyHour() {
+        out.println("Happy Hour - switch it on now? (once per game; lasts this turn and the next)");
+        out.println("  1) Yes, start Happy Hour");
+        out.println("  0) Not now");
+        return readChoice(1) == 1;
+    }
 
     /** @return 0 for Wait, otherwise the 1-based task number */
     public int chooseTask(Staff staff) {
