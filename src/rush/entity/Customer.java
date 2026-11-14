@@ -1,5 +1,15 @@
 package rush.entity;
 
+/**
+ * A restaurant customer. The customer owns its own satisfaction and status;
+ * other objects can only change them through the life-cycle methods below,
+ * which enforce the legal order: WAITING -> SEATED -> ORDERED -> EATING
+ * -> READY_TO_PAY -> PAID (or LEFT at any point before being served).
+ *
+ * <p>The flow is the same for every kind of customer. What differs (patience,
+ * discount, food preference) is supplied by subclasses through the hook
+ * methods, so the rest of the game never needs to check a customer's type.
+ */
 public abstract class Customer {
 
     public static final int MAX_SATISFACTION = 100;
@@ -19,19 +29,30 @@ public abstract class Customer {
         this.arrivalTurn = arrivalTurn;
     }
 
+    // behaviour that varies by customer type
+
+    /**
+     * Default food choice rule: the n-th customer to arrive orders the n-th item
+     * on the menu board, wrapping around (Salad, Burger, Pasta, Salad, ...).
+     */
     public MenuItem chooseItem(Menu menu) {
         return menu.itemAt(id - 1);
     }
 
+    /** Points lost at the end of each turn while not yet served. */
     public abstract int getSatisfactionLoss();
 
+    /** Applies this customer's own discount to a list price. Default: no discount. */
     public int applyDiscount(int priceCents) {
         return priceCents;
     }
 
     public abstract String getTypeName();
 
+    /** Short explanation of how this customer type behaves, shown on arrival. */
     public abstract String describeTraits();
+
+    // life cycle (package-private: only the Restaurant drives it)
 
     void seatAt(Table newTable) {
         requireStatus(CustomerStatus.WAITING);
@@ -52,6 +73,7 @@ public abstract class Customer {
         status = CustomerStatus.EATING;
     }
 
+    /** A customer served on an earlier turn finishes eating after one full turn. */
     boolean finishEatingIfDone(int turn) {
         if (status == CustomerStatus.EATING && servedTurn < turn) {
             status = CustomerStatus.READY_TO_PAY;
@@ -61,6 +83,7 @@ public abstract class Customer {
         return false;
     }
 
+    /** A customer who became READY_TO_PAY this turn can pay next turn at the earliest. */
     public boolean canPayOn(int turn) {
         return status == CustomerStatus.READY_TO_PAY && readyToPayTurn < turn;
     }
