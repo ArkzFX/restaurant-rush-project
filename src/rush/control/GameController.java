@@ -51,7 +51,7 @@ public class GameController {
         for (Customer newCustomer : arrivingOn(turn)) {
             restaurant.admit(newCustomer);
             ui.showEvent("Arrival: " + newCustomer.label() + " joins the waiting queue with satisfaction "
-                    + newCustomer.getSatisfaction() + ".");
+                    + newCustomer.getSatisfaction() + " (" + newCustomer.describeTraits() + ").");
         }
         ui.showState(restaurant, assignableStaff);
 

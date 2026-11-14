@@ -34,23 +34,47 @@ public class GameConfig {
         this.objective = objective;
     }
 
-    /** The required, reproducible base setting from the brief (Section 2.1). */
+    /**
+     * The required, reproducible base setting (Section 2.1) with the Stage 2 customer mix:
+     * the 2nd arrival is a Critic and the 4th a VIP, the other four are Regular.
+     */
     public static GameConfig baseSetting() {
+        CustomerType[] mix = {CustomerType.REGULAR, CustomerType.CRITIC, CustomerType.REGULAR,
+                CustomerType.VIP, CustomerType.REGULAR, CustomerType.REGULAR};
+        return new GameConfig("Base setting (Stage 2: VIP and Critic)", 18, 2, standardMenu(),
+                buildArrivals(mix), standardObjective());
+    }
+
+    /** The Stage 1 setting (six Regular customers), kept so earlier runs can be replayed. */
+    public static GameConfig stage1Setting() {
+        CustomerType[] allRegular = {CustomerType.REGULAR, CustomerType.REGULAR, CustomerType.REGULAR,
+                CustomerType.REGULAR, CustomerType.REGULAR, CustomerType.REGULAR};
+        return new GameConfig("Stage 1 setting (all Regular)", 18, 2, standardMenu(),
+                buildArrivals(allRegular), standardObjective());
+    }
+
+    /** One customer at the start of turns 1, 4, 7, 10, 13 and 16, in the order given. */
+    private static List<Arrival> buildArrivals(CustomerType[] types) {
+        int[] arrivalTurns = {1, 4, 7, 10, 13, 16};
+        List<Arrival> arrivals = new ArrayList<>();
+        for (int i = 0; i < arrivalTurns.length; i++) {
+            arrivals.add(new Arrival(arrivalTurns[i], types[i]));
+        }
+        return arrivals;
+    }
+
+    private static Menu standardMenu() {
         // prices are stored in cents, so $9.00 is 900
         List<MenuItem> dishes = new ArrayList<>();
         dishes.add(new MenuItem("Salad", 900, 1));
         dishes.add(new MenuItem("Burger", 1500, 1));
         dishes.add(new MenuItem("Pasta", 1800, 2));
-        Menu menu = new Menu(dishes);
+        return new Menu(dishes);
+    }
 
-        // one customer at the start of turns 1, 4, 7, 10, 13 and 16
-        int[] arrivalTurns = {1, 4, 7, 10, 13, 16};
-        List<Arrival> arrivals = new ArrayList<>();
-        for (int turn : arrivalTurns) {
-            arrivals.add(new Arrival(turn));
-        }
+    private static Objective standardObjective() {
         // 4 paid customers, $45.00 (4500 cents), average satisfaction of 60
-        return new GameConfig("Base setting", 18, 2, menu, arrivals, new Objective(4, 4500, 60));
+        return new Objective(4, 4500, 60);
     }
 
     /** Staff the manager directs each turn, in the order they act. */
