@@ -3,7 +3,7 @@
 A turn-based restaurant management game in basic Java with a command-line interface. You are the
 manager: each turn you give the Waiter and the Chef one task each (or tell them to wait).
 
-This folder is the **Stage 1** version: Regular customers only, three menu items, Waiter, Chef, Cashier,
+This is the **Stage 1** version: Regular customers only, three menu items, Waiter, Chef, Cashier,
 two tables, the full six-step turn, abandonment, victory and defeat.
 
 ## Build and run
