@@ -1,4 +1,5 @@
 # Stage 2 reproducible VICTORY run (base setting: #2 is a Critic, #4 is a VIP)
+# ARGS: --stage2
 # EXPECT: VICTORY
 # EXPECT: Paid customers: 5
 # EXPECT: Revenue: $68.10
