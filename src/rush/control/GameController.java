@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import rush.boundary.ConsoleUI;
 import rush.entity.Customer;
+import rush.entity.HappyHour;
 import rush.entity.Restaurant;
 import rush.staff.Cashier;
 import rush.staff.Staff;
@@ -26,7 +27,8 @@ public class GameController {
     public GameController(GameConfig config, ConsoleUI ui) {
         this.config = config;
         this.ui = ui;
-        this.restaurant = new Restaurant(config.getTableCount(), config.getMenu());
+        this.restaurant = new Restaurant(config.getTableCount(), config.getMenu(),
+                new HappyHour(config.isHappyHourOffered()));
         this.assignableStaff = config.createAssignableStaff();
         this.cashier = config.createCashier();
     }
@@ -54,8 +56,9 @@ public class GameController {
                     + newCustomer.getSatisfaction() + " (" + newCustomer.describeTraits() + ").");
         }
         ui.showState(restaurant, assignableStaff);
+        startOfTurnPolicies();
 
-        // Steps 2 and 3: manager choices, executed in staff order (Waiter before Chef)
+        // Steps 2 and 3: manager choices, executed in staff order (Host, Waiter, then Chef)
         for (Staff staffMember : assignableStaff) {
             directStaff(staffMember);
         }
@@ -75,8 +78,24 @@ public class GameController {
             ui.showEvent(departedCustomer.label() + " ran out of patience and LEFT without paying.");
         }
 
-        // Step 6: end-of-turn results
+        // Step 6: end-of-turn results, after Happy Hour has counted down one turn
+        restaurant.endTurn();
         ui.showEndOfTurn(turn, config.getMaxTurns(), restaurant);
+    }
+
+    /** Happy Hour may be switched on at the start of a turn; while active, waiting customers recover. */
+    private void startOfTurnPolicies() {
+        HappyHour happyHourPolicy = restaurant.getHappyHour();
+        // canActivate is false when the setting has no Happy Hour and once the one use is spent
+        if (happyHourPolicy.canActivate() && ui.offerHappyHour()) {
+            happyHourPolicy.activate();
+            ui.showEvent("Happy Hour is ON for this turn and the next: orders taken get 20% off, and waiting"
+                    + " customers recover " + HappyHour.RECOVERY_POINTS + " satisfaction at the start of each turn.");
+        }
+        for (Customer recoveredCustomer : restaurant.applyHappyHourRecovery()) {
+            ui.showEvent("Happy Hour: " + recoveredCustomer.label() + " cheers up, satisfaction now "
+                    + recoveredCustomer.getSatisfaction() + ".");
+        }
     }
 
     private List<Customer> arrivingOn(int turn) {
