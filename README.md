@@ -116,6 +116,7 @@ Happy Hour = $10.80; the Pasta timeline from the brief; a dish finished this tur
   [stage-1...stage-2](https://github.com/ArkzFX/restaurant-rush-project/compare/stage-1...stage-2) ·
   [stage-2...stage-3](https://github.com/ArkzFX/restaurant-rush-project/compare/stage-2...stage-3)
 
+- Video Link: [https://youtu.be/CdRXvgjyOTQ](url)
 - Video table: 
 
 | # | Segment | Presenter | Timestamp |
