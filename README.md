@@ -121,10 +121,10 @@ Happy Hour = $10.80; the Pasta timeline from the brief; a dish finished this tur
 
 | # | Segment | Presenter | Timestamp |
 |---|---|---|---|
-| 1 | Game launching from the submitted project | | |
-| 2 | Meaningful manager choices, including a constrained decision | | |
-| 3 | A dish going READY -> SERVED -> payment | | |
-| 4 | A VIP or Critic behaviour | | |
-| 5 | A Stage 3 feature | | |
-| 6 | One victory and one defeat | | |
-| 7 | Stage tag comparisons and the diagrams | | |
+| 1 | Game launching from the submitted project |Nikita|0:00 |
+| 2 | Meaningful manager choices, including a constrained decision |Jun Weng|6:30 |
+| 3 | A dish going READY -> SERVED -> payment |Aariv|2:00|
+| 4 | A VIP or Critic behaviour |Kai Xuan|3:45|
+| 5 | A Stage 3 feature |Kai Xuan|5:10|
+| 6 | One victory and one defeat |Jun Weng|8:00|
+| 7 | Stage tag comparisons and the diagrams |Thu Htet San|10:00|
